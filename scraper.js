@@ -1,6 +1,6 @@
-function scrape(player, playerList) {
+var processed = false;
 
-  var csv = fs.open(player["output"], 'wb');
+function scrape(original, amount, player, playerList, fullPlayerList, fullHeaderList, playerOutputs) {
 
   // grab all the page data
 
@@ -44,41 +44,96 @@ function scrape(player, playerList) {
     })
   })
 
-  // write the headers and data to a csv file
-
-  headers.forEach(function(ele) {
-    csv.write(ele + "\n");
+  var html = this.evaluate(function () {
+    return $('#news').find('h5').html()
   })
 
-  data[0].forEach(function(ele) {
-    csv.write(ele + "\n");
-  })
-      
-  csv.flush();
+  // populate the first player
 
-  csv.close();
+  if (fullPlayerList.length == 0) {
+
+    console.log('caching data for player : ', player.name)
+
+    fullPlayerList.push(data[0]);
+
+    fullHeaderList.push(headers);
+
+    playerOutputs.push(original[fullPlayerList.length - 1].output)
+  }
+
+  var item = playerOutputs.filter(function(ele) {
+    return ele.replace('.csv', '').replace('_', ' ').toLowerCase() == html.replace(' News', '').toLowerCase() 
+  })
+
+  // since the arguments don't even correspond to the page we're on, use the page html to figure out
+  // if we haven't populated that player yet
+
+  if (item.length == 0) {
+
+    var specificPlayer = original.filter(function (ele) {
+      return ele.name.toLowerCase() == html.replace(' News', '').toLowerCase() 
+    })
+
+    console.log('caching data for player : ', specificPlayer[0].name)
+
+    fullPlayerList.push(data[0]);
+
+    fullHeaderList.push(headers);
+
+    playerOutputs.push(specificPlayer[0].output)
+  }
 
   // fetch the next player in the list
 
   if (playerList.length > 0) {
 
-    var next = playerList.pop();
+    var next = playerList.shift();
 
-    casper.thenOpen(next.url)
+    this.thenOpen(next.url)
     .then(function () {
-      casper.waitFor(function () {
+      this.waitFor(function () {
+    
         return this.evaluate(function () {
-          return $('.responsive-datatable__scrollable').length == 2
+
+          var images = $('.news__news-item')
+
+          return images.length > 0
         })
       }, function () {
-
-        console.log('finished scraping for player : ', player.name)
-
-        console.log('about to start scraping for player : ', next.name)
-
-        scrape.call(this, next, playerList)
+        return scrape.call(this, original, amount, next, playerList, fullPlayerList, fullHeaderList, playerOutputs)
       })
     })
+  } else {
+
+    if (fullPlayerList.length == amount && !processed) {
+
+      processed = true;
+
+      console.log('creating the csvs. please hold!')
+
+      for (var i = 0; i < fullPlayerList.length; i++) {
+  
+        var player = fullPlayerList[i]
+
+        var header = fullHeaderList[i]
+
+        var output = playerOutputs[i]
+
+        var csv = fs.open(playerOutputs[i], 'wb');
+
+        header.forEach(function(ele) {
+          csv.write(ele + "\n");
+        })
+
+        player.forEach(function(ele) {
+          csv.write(ele + "\n");
+        })
+
+        csv.flush();
+
+        csv.close();
+      }
+    }
   }
 }
 

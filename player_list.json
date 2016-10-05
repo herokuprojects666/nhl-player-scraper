@@ -1,4 +1,10 @@
 [
-	{"name" : "Sideny Crosby", "url" : "https://www.nhl.com/player/sidney-crosby-8471675", "output" : "Sidney_Crosby.csv"},
-	{"name" : "Alex Ovechkin", "url" : "https://www.nhl.com/player/alex-ovechkin-8471214", "output" : "Alex_Ovechkin.csv"}
+	{"name" : "Sidney Crosby", "url" : "https://www.nhl.com/player/sidney-crosby-8471675", "output" : "Sidney_Crosby.csv"},
+	{"name" : "Alex Ovechkin", "url" : "https://www.nhl.com/player/alex-ovechkin-8471214", "output" : "Alex_Ovechkin.csv"},
+	{"name" : "Patrick Kane", "url" : "https://www.nhl.com/player/patrick-kane-8474141", "output" : "Patrick_Kane.csv"},
+	{"name" : "Steven Stamkos", "url" : "https://www.nhl.com/player/steven-stamkos-8474564", "output" : "Steven_Stamkos.csv"},
+	{"name" : "Jamie Benn", "url" : "https://www.nhl.com/player/jamie-benn-8473994", "output" : "Jamie_Benn.csv"},
+	{"name" : "John Tavares", "url" : "https://www.nhl.com/player/john-tavares-8475166", "output" : "John Tavares.csv"},
+	{"name" : "P.K. Subban", "url" : "https://www.nhl.com/player/p-k-subban-8474056", "output" : "P.K._Subban.csv"},
+	{"name" : "Jaromir Jagr", "url" : "https://www.nhl.com/player/jaromir-jagr-8448208", "output" : "Jaromir_Jagr.csv"}
 ]
